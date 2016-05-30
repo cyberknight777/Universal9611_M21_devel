@@ -31,11 +31,13 @@
 #include <linux/smp.h>
 #include <linux/init.h>
 #include <linux/seq_file.h>
+
 #include <linux/errno.h>
 #include <linux/list.h>
 #include <linux/kallsyms.h>
 #include <linux/proc_fs.h>
 #include <linux/export.h>
+#include <linux/cpumask.h>
 
 #include <asm/hardware/cache-l2x0.h>
 #include <asm/hardware/cache-uniphier.h>
@@ -118,3 +120,15 @@ int __init arch_probe_nr_irqs(void)
 	return nr_irqs;
 }
 #endif
+
+	struct cpumask available_cpus;
+
+	cpumask_copy(&available_cpus, affinity);
+	cpumask_andnot(&available_cpus, &available_cpus, cpu_isolated_mask);
+	affinity = &available_cpus;
+
+
+		cpumask_andnot(&available_cpus, cpu_online_mask,
+			       cpu_isolated_mask);
+		if (cpumask_empty(affinity))
+
