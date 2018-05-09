@@ -72,13 +72,11 @@
 #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
 #define TEXT_CFI_MAIN .text.cfi .text.[0-9a-zA-Z_]*.cfi
 #define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX*
-#define DATA_MAIN .data .data.[0-9a-zA-Z_]* .data..LPBX* \
-		  .data..compoundliteral* .data..L*
-#define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]*
-#define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]*
-#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]*
-#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral* .bss..L*
-#define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]*
+#define SDATA_MAIN .sdata .sdata.[0-9a-zA-Z_]* .sdata..compoundliteral* .sdata..L* .sdata..L_MergedGlobals*
+#define RODATA_MAIN .rodata .rodata.[0-9a-zA-Z_]* .rodata..compoundliteral* .rodata..L* .rodata..L_MergedGlobals*
+#define BSS_MAIN .bss .bss.[0-9a-zA-Z_]* .bss..compoundliteral* .bss..L* .bss..L_MergedGlobals*
+#define SBSS_MAIN .sbss .sbss.[0-9a-zA-Z_]* .sbss..compoundliteral* .sbss..L* .sbss..L_MergedGlobals*
+
 #else
 #define TEXT_MAIN .text
 #define TEXT_CFI_MAIN .text.cfi
@@ -127,7 +125,7 @@
 
 #ifdef CONFIG_TRACE_BRANCH_PROFILING
 #define LIKELY_PROFILE()	VMLINUX_SYMBOL(__start_annotated_branch_profile) = .; \
-				KEEP(*(_ftrace_annotated_branch))		      \
+				KEEP(*(_ftrace_annotated_branch))	\
 				VMLINUX_SYMBOL(__stop_annotated_branch_profile) = .;
 #else
 #define LIKELY_PROFILE()
@@ -135,7 +133,7 @@
 
 #ifdef CONFIG_PROFILE_ALL_BRANCHES
 #define BRANCH_PROFILE()	VMLINUX_SYMBOL(__start_branch_profile) = .;   \
-				KEEP(*(_ftrace_branch))			      \
+				KEEP(*(_ftrace_branch))			\
 				VMLINUX_SYMBOL(__stop_branch_profile) = .;
 #else
 #define BRANCH_PROFILE()
