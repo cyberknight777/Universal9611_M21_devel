@@ -237,6 +237,7 @@ source "drivers/vibrator/Kconfig"
 source "drivers/fingerprint/Kconfig"
 
 source "drivers/security/samsung/icdrv/Kconfig"
+source "drivers/cpuquiet/Kconfig"
 
 source "drivers/security/samsung/tzic/Kconfig"
 
