@@ -1160,8 +1160,13 @@ init-y		:= $(patsubst %/, %/built-in.o, $(init-y))
 core-y		:= $(patsubst %/, %/built-in.o, $(core-y))
 drivers-y	:= $(patsubst %/, %/built-in.o, $(drivers-y))
 net-y		:= $(patsubst %/, %/built-in.o, $(net-y))
+libs-y2		:= $(patsubst %/, %/built-in.o, $(filter %/, $(libs-y)))
+ifdef CONFIG_MODULES
+libs-y1		:= $(filter-out %/, $(libs-y))
+libs-y2		+= $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
+else
 libs-y1		:= $(patsubst %/, %/lib.a, $(libs-y))
-libs-y2		:= $(filter-out %.a, $(patsubst %/, %/built-in.o, $(libs-y)))
+endif
 virt-y		:= $(patsubst %/, %/built-in.o, $(virt-y))
 
 # Externally visible symbols (used by link-vmlinux.sh)
