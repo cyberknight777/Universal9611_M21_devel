@@ -378,7 +378,6 @@ static int ext4_file_open(struct inode * inode, struct file * filp)
 	struct super_block *sb = inode->i_sb;
 	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
 	struct vfsmount *mnt = filp->f_path.mnt;
-	struct dentry *dir;
 	struct path path;
 	char buf[64], *cp;
 	int ret;

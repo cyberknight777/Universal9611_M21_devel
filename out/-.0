@@ -1,0 +1,363 @@
+; ModuleID = 'lib/win_minmax.o'
+source_filename = "../lib/win_minmax.c"
+target datalayout = "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
+target triple = "aarch64-unknown-linux-gnu"
+
+%struct.kernel_symbol = type { i64, i8* }
+%struct.minmax = type { [3 x %struct.minmax_sample] }
+%struct.minmax_sample = type { i32, i32 }
+
+@__kstrtab_minmax_running_max = internal constant [19 x i8] c"minmax_running_max\00", section "__ksymtab_strings", align 1
+@__ksymtab_minmax_running_max = internal constant %struct.kernel_symbol { i64 ptrtoint (i32 (%struct.minmax*, i32, i32, i32)* @minmax_running_max to i64), i8* getelementptr inbounds ([19 x i8], [19 x i8]* @__kstrtab_minmax_running_max, i32 0, i32 0) }, section "___ksymtab+minmax_running_max", align 8
+@llvm.used = appending global [1 x i8*] [i8* bitcast (void (i8*, i8*)* @__cfi_check_fail to i8*)], section "llvm.metadata"
+@llvm.compiler.used = appending global [1 x i8*] [i8* bitcast (%struct.kernel_symbol* @__ksymtab_minmax_running_max to i8*)], section "llvm.metadata"
+
+; Function Attrs: nofree noimplicitfloat nounwind null_pointer_is_valid willreturn
+define dso_local i32 @minmax_running_max(%struct.minmax* nocapture %0, i32 %1, i32 %2, i32 %3) #0 !type !9 !type !10 !type !11 {
+  %5 = getelementptr inbounds %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 0, i32 1
+  %6 = load i32, i32* %5, align 4
+  %7 = icmp ugt i32 %6, %3
+  br i1 %7, label %8, label %14, !prof !12
+
+8:                                                ; preds = %4
+  %9 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 2
+  %10 = getelementptr inbounds %struct.minmax_sample, %struct.minmax_sample* %9, i64 0, i32 0
+  %11 = load i32, i32* %10, align 4
+  %12 = sub i32 %2, %11
+  %13 = icmp ugt i32 %12, %1
+  br i1 %13, label %14, label %22, !prof !13
+
+14:                                               ; preds = %8, %4
+  %15 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 2
+  %16 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %17 = getelementptr inbounds %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 0, i32 0
+  store i32 %2, i32* %17, align 4
+  store i32 %3, i32* %5, align 4
+  %18 = bitcast %struct.minmax* %0 to i64*
+  %19 = bitcast %struct.minmax_sample* %16 to i64*
+  %20 = load i64, i64* %18, align 4
+  store i64 %20, i64* %19, align 4
+  %21 = bitcast %struct.minmax_sample* %15 to i64*
+  store i64 %20, i64* %21, align 4
+  br label %95
+
+22:                                               ; preds = %8
+  %23 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1, i32 1
+  %24 = load i32, i32* %23, align 4
+  %25 = icmp ugt i32 %24, %3
+  br i1 %25, label %34, label %26, !prof !12
+
+26:                                               ; preds = %22
+  %27 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %28 = bitcast %struct.minmax_sample* %27 to i64*
+  %29 = zext i32 %3 to i64
+  %30 = shl nuw i64 %29, 32
+  %31 = zext i32 %2 to i64
+  %32 = or i64 %30, %31
+  store i64 %32, i64* %28, align 4
+  %33 = bitcast %struct.minmax_sample* %9 to i64*
+  store i64 %32, i64* %33, align 4
+  br label %44
+
+34:                                               ; preds = %22
+  %35 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 2, i32 1
+  %36 = load i32, i32* %35, align 4
+  %37 = icmp ugt i32 %36, %3
+  br i1 %37, label %44, label %38, !prof !12
+
+38:                                               ; preds = %34
+  %39 = bitcast %struct.minmax_sample* %9 to i64*
+  %40 = zext i32 %3 to i64
+  %41 = shl nuw i64 %40, 32
+  %42 = zext i32 %2 to i64
+  %43 = or i64 %41, %42
+  store i64 %43, i64* %39, align 4
+  br label %44
+
+44:                                               ; preds = %38, %34, %26
+  %45 = phi i32 [ %11, %34 ], [ %2, %38 ], [ %2, %26 ]
+  %46 = getelementptr inbounds %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 0, i32 0
+  %47 = load i32, i32* %46, align 4
+  %48 = sub i32 %2, %47
+  %49 = icmp ugt i32 %48, %1
+  br i1 %49, label %50, label %69, !prof !13
+
+50:                                               ; preds = %44
+  %51 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %52 = bitcast %struct.minmax_sample* %51 to i64*
+  %53 = bitcast %struct.minmax* %0 to i64*
+  %54 = load i64, i64* %52, align 4
+  store i64 %54, i64* %53, align 4
+  %55 = bitcast %struct.minmax_sample* %9 to i64*
+  %56 = load i64, i64* %55, align 4
+  store i64 %56, i64* %52, align 4
+  %57 = zext i32 %3 to i64
+  %58 = shl nuw i64 %57, 32
+  %59 = zext i32 %2 to i64
+  %60 = or i64 %58, %59
+  store i64 %60, i64* %55, align 4
+  %61 = trunc i64 %54 to i32
+  %62 = sub i32 %2, %61
+  %63 = icmp ugt i32 %62, %1
+  %64 = lshr i64 %54, 32
+  %65 = trunc i64 %64 to i32
+  br i1 %63, label %66, label %95, !prof !13
+
+66:                                               ; preds = %50
+  store i64 %56, i64* %53, align 4
+  store i64 %60, i64* %52, align 4
+  store i64 %60, i64* %55, align 4
+  %67 = lshr i64 %56, 32
+  %68 = trunc i64 %67 to i32
+  br label %95
+
+69:                                               ; preds = %44
+  %70 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %71 = getelementptr inbounds %struct.minmax_sample, %struct.minmax_sample* %70, i64 0, i32 0
+  %72 = load i32, i32* %71, align 4
+  %73 = icmp eq i32 %72, %47
+  %74 = lshr i32 %1, 2
+  %75 = icmp ugt i32 %48, %74
+  %76 = and i1 %75, %73
+  br i1 %76, label %77, label %84, !prof !14
+
+77:                                               ; preds = %69
+  %78 = bitcast %struct.minmax_sample* %70 to i64*
+  %79 = zext i32 %3 to i64
+  %80 = shl nuw i64 %79, 32
+  %81 = zext i32 %2 to i64
+  %82 = or i64 %80, %81
+  store i64 %82, i64* %78, align 4
+  %83 = bitcast %struct.minmax_sample* %9 to i64*
+  store i64 %82, i64* %83, align 4
+  br label %95
+
+84:                                               ; preds = %69
+  %85 = icmp eq i32 %45, %72
+  %86 = lshr i32 %1, 1
+  %87 = icmp ugt i32 %48, %86
+  %88 = and i1 %87, %85
+  br i1 %88, label %89, label %95, !prof !14
+
+89:                                               ; preds = %84
+  %90 = bitcast %struct.minmax_sample* %9 to i64*
+  %91 = zext i32 %3 to i64
+  %92 = shl nuw i64 %91, 32
+  %93 = zext i32 %2 to i64
+  %94 = or i64 %92, %93
+  store i64 %94, i64* %90, align 4
+  br label %95
+
+95:                                               ; preds = %89, %84, %77, %66, %50, %14
+  %96 = phi i32 [ %3, %14 ], [ %65, %50 ], [ %68, %66 ], [ %6, %77 ], [ %6, %84 ], [ %6, %89 ]
+  ret i32 %96
+}
+
+; Function Attrs: nofree noimplicitfloat nounwind null_pointer_is_valid willreturn
+define dso_local i32 @minmax_running_min(%struct.minmax* nocapture %0, i32 %1, i32 %2, i32 %3) local_unnamed_addr #0 !type !9 !type !10 !type !11 {
+  %5 = getelementptr inbounds %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 0, i32 1
+  %6 = load i32, i32* %5, align 4
+  %7 = icmp ult i32 %6, %3
+  br i1 %7, label %8, label %14, !prof !12
+
+8:                                                ; preds = %4
+  %9 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 2
+  %10 = getelementptr inbounds %struct.minmax_sample, %struct.minmax_sample* %9, i64 0, i32 0
+  %11 = load i32, i32* %10, align 4
+  %12 = sub i32 %2, %11
+  %13 = icmp ugt i32 %12, %1
+  br i1 %13, label %14, label %22, !prof !13
+
+14:                                               ; preds = %8, %4
+  %15 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 2
+  %16 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %17 = getelementptr inbounds %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 0, i32 0
+  store i32 %2, i32* %17, align 4
+  store i32 %3, i32* %5, align 4
+  %18 = bitcast %struct.minmax* %0 to i64*
+  %19 = bitcast %struct.minmax_sample* %16 to i64*
+  %20 = load i64, i64* %18, align 4
+  store i64 %20, i64* %19, align 4
+  %21 = bitcast %struct.minmax_sample* %15 to i64*
+  store i64 %20, i64* %21, align 4
+  br label %95
+
+22:                                               ; preds = %8
+  %23 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1, i32 1
+  %24 = load i32, i32* %23, align 4
+  %25 = icmp ult i32 %24, %3
+  br i1 %25, label %34, label %26, !prof !12
+
+26:                                               ; preds = %22
+  %27 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %28 = bitcast %struct.minmax_sample* %27 to i64*
+  %29 = zext i32 %3 to i64
+  %30 = shl nuw i64 %29, 32
+  %31 = zext i32 %2 to i64
+  %32 = or i64 %30, %31
+  store i64 %32, i64* %28, align 4
+  %33 = bitcast %struct.minmax_sample* %9 to i64*
+  store i64 %32, i64* %33, align 4
+  br label %44
+
+34:                                               ; preds = %22
+  %35 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 2, i32 1
+  %36 = load i32, i32* %35, align 4
+  %37 = icmp ult i32 %36, %3
+  br i1 %37, label %44, label %38, !prof !12
+
+38:                                               ; preds = %34
+  %39 = bitcast %struct.minmax_sample* %9 to i64*
+  %40 = zext i32 %3 to i64
+  %41 = shl nuw i64 %40, 32
+  %42 = zext i32 %2 to i64
+  %43 = or i64 %41, %42
+  store i64 %43, i64* %39, align 4
+  br label %44
+
+44:                                               ; preds = %38, %34, %26
+  %45 = phi i32 [ %11, %34 ], [ %2, %38 ], [ %2, %26 ]
+  %46 = getelementptr inbounds %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 0, i32 0
+  %47 = load i32, i32* %46, align 4
+  %48 = sub i32 %2, %47
+  %49 = icmp ugt i32 %48, %1
+  br i1 %49, label %50, label %69, !prof !13
+
+50:                                               ; preds = %44
+  %51 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %52 = bitcast %struct.minmax_sample* %51 to i64*
+  %53 = bitcast %struct.minmax* %0 to i64*
+  %54 = load i64, i64* %52, align 4
+  store i64 %54, i64* %53, align 4
+  %55 = bitcast %struct.minmax_sample* %9 to i64*
+  %56 = load i64, i64* %55, align 4
+  store i64 %56, i64* %52, align 4
+  %57 = zext i32 %3 to i64
+  %58 = shl nuw i64 %57, 32
+  %59 = zext i32 %2 to i64
+  %60 = or i64 %58, %59
+  store i64 %60, i64* %55, align 4
+  %61 = trunc i64 %54 to i32
+  %62 = sub i32 %2, %61
+  %63 = icmp ugt i32 %62, %1
+  %64 = lshr i64 %54, 32
+  %65 = trunc i64 %64 to i32
+  br i1 %63, label %66, label %95, !prof !13
+
+66:                                               ; preds = %50
+  store i64 %56, i64* %53, align 4
+  store i64 %60, i64* %52, align 4
+  store i64 %60, i64* %55, align 4
+  %67 = lshr i64 %56, 32
+  %68 = trunc i64 %67 to i32
+  br label %95
+
+69:                                               ; preds = %44
+  %70 = getelementptr %struct.minmax, %struct.minmax* %0, i64 0, i32 0, i64 1
+  %71 = getelementptr inbounds %struct.minmax_sample, %struct.minmax_sample* %70, i64 0, i32 0
+  %72 = load i32, i32* %71, align 4
+  %73 = icmp eq i32 %72, %47
+  %74 = lshr i32 %1, 2
+  %75 = icmp ugt i32 %48, %74
+  %76 = and i1 %75, %73
+  br i1 %76, label %77, label %84, !prof !14
+
+77:                                               ; preds = %69
+  %78 = bitcast %struct.minmax_sample* %70 to i64*
+  %79 = zext i32 %3 to i64
+  %80 = shl nuw i64 %79, 32
+  %81 = zext i32 %2 to i64
+  %82 = or i64 %80, %81
+  store i64 %82, i64* %78, align 4
+  %83 = bitcast %struct.minmax_sample* %9 to i64*
+  store i64 %82, i64* %83, align 4
+  br label %95
+
+84:                                               ; preds = %69
+  %85 = icmp eq i32 %45, %72
+  %86 = lshr i32 %1, 1
+  %87 = icmp ugt i32 %48, %86
+  %88 = and i1 %87, %85
+  br i1 %88, label %89, label %95, !prof !14
+
+89:                                               ; preds = %84
+  %90 = bitcast %struct.minmax_sample* %9 to i64*
+  %91 = zext i32 %3 to i64
+  %92 = shl nuw i64 %91, 32
+  %93 = zext i32 %2 to i64
+  %94 = or i64 %92, %93
+  store i64 %94, i64* %90, align 4
+  br label %95
+
+95:                                               ; preds = %89, %84, %77, %66, %50, %14
+  %96 = phi i32 [ %3, %14 ], [ %65, %50 ], [ %68, %66 ], [ %6, %77 ], [ %6, %84 ], [ %6, %89 ]
+  ret i32 %96
+}
+
+; Function Attrs: noimplicitfloat nounwind null_pointer_is_valid
+define weak_odr hidden void @__cfi_check_fail(i8* %0, i8* %1) #1 {
+  %3 = icmp eq i8* %0, null, !nosanitize !15
+  br i1 %3, label %4, label %5, !nosanitize !15
+
+4:                                                ; preds = %5, %2
+  tail call void @llvm.ubsantrap(i8 2) #3, !nosanitize !15
+  unreachable, !nosanitize !15
+
+5:                                                ; preds = %2
+  %6 = load i8, i8* %0, align 4, !nosanitize !15
+  %7 = icmp ult i8 %6, 5
+  br i1 %7, label %4, label %8
+
+8:                                                ; preds = %5
+  ret void, !nosanitize !15
+}
+
+; Function Attrs: cold noreturn nounwind
+declare void @llvm.ubsantrap(i8 immarg) #2
+
+define weak dso_local void @__cfi_check(i64 %0, i8* %1, i8* %2) local_unnamed_addr {
+  tail call void @llvm.trap()
+  unreachable
+}
+
+; Function Attrs: cold noreturn nounwind
+declare void @llvm.trap() #2
+
+attributes #0 = { nofree noimplicitfloat nounwind null_pointer_is_valid willreturn "frame-pointer"="none" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="generic" "target-features"="+neon" }
+attributes #1 = { noimplicitfloat nounwind null_pointer_is_valid "frame-pointer"="none" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="generic" "target-features"="+neon" }
+attributes #2 = { cold noreturn nounwind }
+attributes #3 = { noreturn nounwind }
+
+!llvm.module.flags = !{!0, !1, !2, !3, !4, !5, !6, !7}
+!llvm.ident = !{!8}
+
+!0 = !{i32 1, !"wchar_size", i32 2}
+!1 = !{i32 4, !"Cross-DSO CFI", i32 1}
+!2 = !{i32 4, !"CFI Canonical Jump Tables", i32 0}
+!3 = !{i32 1, !"branch-target-enforcement", i32 0}
+!4 = !{i32 1, !"sign-return-address", i32 0}
+!5 = !{i32 1, !"sign-return-address-all", i32 0}
+!6 = !{i32 1, !"sign-return-address-with-bkey", i32 0}
+!7 = !{i32 1, !"EnableSplitLTOUnit", i32 1}
+!8 = !{!"Proton clang version 13.0.0 (https://github.com/llvm/llvm-project 7ee96429a0b057bcc97331a6a762fc3cd00aed61)"}
+!9 = !{i64 0, !"_ZTSFjP6minmaxjjjE"}
+!10 = !{i64 0, !"_ZTSFjPvjjjE.generalized"}
+!11 = !{i64 0, i64 -9108633685777981530}
+!12 = !{!"branch_weights", i32 2000, i32 1}
+!13 = !{!"branch_weights", i32 1, i32 2000}
+!14 = !{!"branch_weights", i32 1, i32 4001}
+!15 = !{}
+
+^0 = module: (path: "lib/win_minmax.o", hash: (4136889987, 2034806224, 2352302277, 1854161680, 3037830778))
+^1 = gv: (name: "__ksymtab_minmax_running_max", summaries: (variable: (module: ^0, flags: (linkage: internal, visibility: default, notEligibleToImport: 1, live: 0, dsoLocal: 1, canAutoHide: 0), varFlags: (readonly: 1, writeonly: 0, constant: 1), refs: (^9, ^7)))) ; guid = 1754461687087485827
+^2 = gv: (name: "__cfi_check_fail", summaries: (function: (module: ^0, flags: (linkage: weak_odr, visibility: hidden, notEligibleToImport: 0, live: 0, dsoLocal: 1, canAutoHide: 0), insts: 8))) ; guid = 3751450213607891692
+^3 = gv: (name: "minmax_running_min", summaries: (function: (module: ^0, flags: (linkage: external, visibility: default, notEligibleToImport: 0, live: 0, dsoLocal: 1, canAutoHide: 0), insts: 109))) ; guid = 4477729702471019840
+^4 = gv: (name: "llvm.trap") ; guid = 6116349651215144041
+^5 = gv: (name: "__cfi_check", summaries: (function: (module: ^0, flags: (linkage: weak, visibility: default, notEligibleToImport: 0, live: 0, dsoLocal: 1, canAutoHide: 0), insts: 2))) ; guid = 6679345584174613038
+^6 = gv: (name: "llvm.ubsantrap") ; guid = 9041041861019930605
+^7 = gv: (name: "minmax_running_max", summaries: (function: (module: ^0, flags: (linkage: external, visibility: default, notEligibleToImport: 0, live: 0, dsoLocal: 1, canAutoHide: 0), insts: 109))) ; guid = 9227984979007309384
+^8 = gv: (name: "llvm.compiler.used", summaries: (variable: (module: ^0, flags: (linkage: appending, visibility: default, notEligibleToImport: 1, live: 1, dsoLocal: 0, canAutoHide: 0), varFlags: (readonly: 0, writeonly: 0, constant: 0), refs: (^1)))) ; guid = 9610627770985738006
+^9 = gv: (name: "__kstrtab_minmax_running_max", summaries: (variable: (module: ^0, flags: (linkage: internal, visibility: default, notEligibleToImport: 1, live: 0, dsoLocal: 1, canAutoHide: 0), varFlags: (readonly: 1, writeonly: 0, constant: 1)))) ; guid = 13308364086381013224
+^10 = gv: (name: "llvm.used", summaries: (variable: (module: ^0, flags: (linkage: appending, visibility: default, notEligibleToImport: 0, live: 1, dsoLocal: 0, canAutoHide: 0), varFlags: (readonly: 0, writeonly: 0, constant: 0), refs: (^2)))) ; guid = 15665353970260777610
+^11 = flags: 8
+^12 = blockcount: 35

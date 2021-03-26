@@ -40,7 +40,6 @@ config SAMSUNG_FREECESS
 	  thraw frozen process when recv sig.
 
 source "drivers/staging/android/ion/Kconfig"
-
 endif # if ANDROID
 
 endmenu
