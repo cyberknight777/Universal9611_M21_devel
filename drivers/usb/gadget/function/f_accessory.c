@@ -864,6 +864,7 @@ static int acc_open(struct inode *ip, struct file *fp)
 {
 	struct acc_dev *dev = get_acc_dev();
 
+
 	if (!dev)
 		return -ENODEV;
 
