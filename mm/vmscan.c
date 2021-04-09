@@ -1865,6 +1865,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
 	struct zone_reclaim_stat *reclaim_stat = &lruvec->reclaim_stat;
 	bool stalled = false;
 
+
 	while (unlikely(too_many_isolated(pgdat, file, sc))) {
 		if (stalled)
 			return 0;
@@ -1916,6 +1917,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
 
 	nr_reclaimed = shrink_page_list(&page_list, pgdat, sc, 0,
 				&stat, false);
+
 
 	spin_lock_irq(&pgdat->lru_lock);
 
@@ -2221,6 +2223,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
  */
 static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
 				 struct scan_control *sc, bool trace)
+
 {
 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
@@ -2239,6 +2242,7 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
 
 	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
 	active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
+
 
 	/*
 	 * When refaults are being observed, it means a new workingset
@@ -2267,9 +2271,11 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
 
 static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
 				 struct lruvec *lruvec, struct scan_control *sc)
+
 {
 	if (is_active_lru(lru)) {
 		if (inactive_list_is_low(lruvec, is_file_lru(lru), sc, true))
+
 			shrink_active_list(nr_to_scan, lruvec, sc, lru);
 		return 0;
 	}
@@ -2292,6 +2298,7 @@ enum mem_boost {
 };
 static int mem_boost_mode = NO_BOOST;
 static unsigned long last_mode_change;
+
 
 #define MEM_BOOST_MAX_TIME (5 * HZ) /* 5 sec */
 
@@ -2333,6 +2340,7 @@ static ssize_t available_size_show(struct kobject *kobj,
 	return sprintf(buf, "%ld %s\n",
 		       get_kanond_wmark_high() >> (20 - PAGE_SHIFT),
 		       get_kanond_balanced_reason());
+
 }
 
 static ssize_t available_size_store(struct kobject *kobj,
@@ -2349,12 +2357,14 @@ static ssize_t available_size_store(struct kobject *kobj,
 	err = set_kanond_wmark_high(size_pages);
 	if (err)
 		return -EINVAL;
+
 	return count;
 }
 
 static struct kobj_attribute available_size_attr
 		= __ATTR_RW(available_size);
 #endif
+
 
 static struct attribute *vmscan_attrs[] = {
 	&mem_boost_mode_attr.attr,
@@ -2388,7 +2398,7 @@ static inline bool mem_boost_pgdat_wmark(struct pglist_data *pgdat)
 }
 
 #define MEM_BOOST_THRESHOLD ((300 * 1024 * 1024) / (PAGE_SIZE))
-inline bool need_memory_boosting(struct pglist_data *pgdat)
+bool need_memory_boosting(struct pglist_data *pgdat)
 {
 	bool ret;
 	unsigned long pgdatfile = node_page_state(pgdat, NR_ACTIVE_FILE) +
@@ -2397,6 +2407,7 @@ inline bool need_memory_boosting(struct pglist_data *pgdat)
 	if (time_after(jiffies, last_mode_change + MEM_BOOST_MAX_TIME) ||
 			pgdatfile < MEM_BOOST_THRESHOLD)
 		mem_boost_mode = NO_BOOST;
+
 
 	switch (mem_boost_mode) {
 	case BOOST_HIGH:
@@ -3079,6 +3090,7 @@ static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
 		unsigned long refaults;
 		struct lruvec *lruvec;
 
+
 		lruvec = mem_cgroup_lruvec(pgdat, memcg);
 		refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
 		lruvec->refaults = refaults;
@@ -3714,6 +3726,7 @@ static enum zone_type kswapd_classzone_idx(pg_data_t *pgdat,
 {
 	enum zone_type curr_idx = READ_ONCE(pgdat->kswapd_classzone_idx);
 
+
 	return curr_idx == MAX_NR_ZONES ? prev_classzone_idx : curr_idx;
 }
 
@@ -4095,6 +4108,7 @@ static int __init kswapd_init(void)
 	WARN_ON(ret < 0);
 	if (sysfs_create_group(mm_kobj, &vmscan_attr_group))
 		pr_err("vmscan: register sysfs failed\n");
+
 	return 0;
 }
 
