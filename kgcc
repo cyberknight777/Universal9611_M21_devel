@@ -11,5 +11,6 @@ export ANDROID_MAJOR_VERSION=q
 export PATH="/home/_123/KERNEL/gcc-arm64/bin:$PATH"
 export CC=gcc
 export CROSS_COMPILE=aarch64-elf-
+ulimit -n 4096
 make m21_defconfig
 make -j16
