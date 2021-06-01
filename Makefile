@@ -393,7 +393,11 @@ OBJSIZE		= llvm-size
 STRIP		= llvm-strip
 else
 CC		= $(CROSS_COMPILE)gcc
+ifeq ($(GCC_LLD),1)
+LD		= $(CROSS_COMPILE)ld.lld
+else
 LD		= $(CROSS_COMPILE)ld
+endif
 LDGOLD		= $(CROSS_COMPILE)ld.gold
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
@@ -1333,10 +1337,13 @@ else ifdef CONFIG_LTO_GCC
   ifeq ($(call gcc-ifversion, -lt, 0500,y),y)
 	@echo Cannot use CONFIG_LTO_GCC: requires gcc 5.0 or later >&2 && exit 1
   endif
+ ifneq ($(ld-name), lld)
   ifeq ($(call ld-ifversion,-lt,227000000,y),y)
 	@echo Cannot use CONFIG_LTO_GCC: requires binutils 2.27 or later >&2 && exit 1
   endif
+   endif
 endif
+  
 # Make sure compiler supports LTO flags
 ifdef lto-flags
   ifeq ($(call cc-option, $(lto-flags)),)
