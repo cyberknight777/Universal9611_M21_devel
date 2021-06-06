@@ -55,6 +55,9 @@ struct sighand_struct;
 struct signal_struct;
 struct task_delay_info;
 struct task_group;
+#ifdef CONFIG_CPU_QUIET_GOVERNOR_RUNNABLE
+extern u64 nr_running_integral(unsigned int cpu);
+#endif
 
 /*
  * Task state bitmask. NOTE! These bits are also

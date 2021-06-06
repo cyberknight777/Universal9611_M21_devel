@@ -21,6 +21,7 @@
 #include <linux/sched/cputime.h>
 #include <linux/sched/init.h>
 #include <linux/sched/smt.h>
+#include <linux/sched/loadavg.h>
 
 #include <linux/u64_stats_sync.h>
 #include <linux/kernel_stat.h>
@@ -781,6 +782,12 @@ struct rq {
 #endif /* CONFIG_NO_HZ_COMMON */
 #ifdef CONFIG_NO_HZ_FULL
 	unsigned long last_sched_tick;
+#endif
+#ifdef CONFIG_CPU_QUIET_GOVERNOR_RUNNABLE
+	/* time-based average load */
+	u64 nr_last_stamp;
+	u64 nr_running_integral;
+	seqcount_t ave_seqcnt;
 #endif
 	/* capture load from *all* tasks on this cpu: */
 	struct load_weight load;
@@ -1813,6 +1820,20 @@ static inline void sched_update_tick_dependency(struct rq *rq)
 #else
 static inline void sched_update_tick_dependency(struct rq *rq) { }
 #endif
+#ifdef CONFIG_CPU_QUIET_GOVERNOR_RUNNABLE
+#define NR_AVE_SCALE(x)		((x) << FSHIFT)
+static inline u64 do_nr_running_integral(struct rq *rq)
+{
+	s64 nr, deltax;
+	u64 nr_running_integral = rq->nr_running_integral;
+
+	deltax = rq->clock_task - rq->nr_last_stamp;
+	nr = NR_AVE_SCALE(rq->nr_running);
+
+	nr_running_integral += nr * deltax;
+
+	return nr_running_integral;
+}
 
 static inline void add_nr_running(struct rq *rq, unsigned count)
 {
@@ -1836,6 +1857,10 @@ static inline void sub_nr_running(struct rq *rq, unsigned count)
 	/* Check if we still need preemption */
 	sched_update_tick_dependency(rq);
 }
+#else
+#define add_nr_running __add_nr_running
+#define sub_nr_running __sub_nr_running
+#endif
 
 static inline void rq_last_tick_reset(struct rq *rq)
 {
