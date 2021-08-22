@@ -1450,6 +1450,15 @@ static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpuma
 	return 0;
 }
 #endif
+<<<<<<< HEAD
+=======
+
+void sched_migrate_to_cpumask_start(struct cpumask *old_mask,
+				    const struct cpumask *dest);
+void sched_migrate_to_cpumask_end(const struct cpumask *old_mask,
+				  const struct cpumask *dest);
+
+>>>>>>> e7b8baa11a (sched: Add API to migrate the current process to a given cpumask)
 #ifndef cpu_relax_yield
 #define cpu_relax_yield() cpu_relax()
 #endif
