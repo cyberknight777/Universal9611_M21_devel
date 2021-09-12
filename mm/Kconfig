@@ -780,7 +780,6 @@ config INCREASE_MAXIMUM_SWAPPINESS
 config LARGE_DIRTY_BUFFER
 	bool "Use large dirty_threshold value by enabling dirty_ratio"
 	default y
-
 	help
 	  This config enables dirty_ratio/dirty_background_ratio,
 	  and it means large dirty_threshold value in 64bit architectures.
@@ -885,6 +884,10 @@ config VMPRESSURE_LEVEL_MED
 	default 60
 	help
 	  This supports to adjust vmpressure_level_med threshold value
+
+config DISABLE_OOM_KILLER
+	bool "Disable OOM Killer"
+	default n
 
 config PRLMK
 	bool "Enable PRLMK"
