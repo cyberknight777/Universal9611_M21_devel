@@ -71,23 +71,7 @@ chmod 755 /system/etc/init.d;
 # Change permissions
 chmod 755 /system/bin/busybox;
 
-# Optimized_Kernel_Features
-cp /tmp/anykernel/tools/sysinit_cm /system/bin/sysinit_cm;
-chmod 644 /system/system/bin/sysinit_cm;
-cp /tmp/anykernel/tools/30zram /system/etc/init.d/30zram;
-cp /tmp/anykernel/tools/40perf /system/etc/init.d/40perf;
-
 ####################################################################
-# Set KNOX to 0x0 on running /system
-$RESETPROP ro.boot.warranty_bit "0";
-$RESETPROP ro.warranty_bit "0";
-
-# Fix Samsung Related Flags
-$RESETPROP ro.fmp_config "1";
-$RESETPROP ro.boot.fmp_config "1";
-
-# Fix Samsung Health (CuBz90@XDA)
-$RESETPROP ro.config.tima "0";
 
 # Fix safetynet flags
 $RESETPROP ro.boot.veritymode "enforcing";
