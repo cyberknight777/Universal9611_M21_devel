@@ -2437,10 +2437,10 @@ static struct kobj_attribute available_size_attr
 
 static struct attribute *vmscan_attrs[] = {
 	&mem_boost_mode_attr.attr,
+	&am_app_launch_attr.attr,
 #ifdef CONFIG_KANOND
 	&available_size_attr.attr,
 #endif
-	&am_app_launch_attr.attr,
 	NULL,
 };
 
