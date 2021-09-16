@@ -3,11 +3,11 @@
 export PLATFORM_VERSION=11
 export ANDROID_MAJOR_VERSION=r
 export ARCH=arm64
-export KBUILD_BUILD_USER=Ramen
-export KBUILD_BUILD_HOST=SUSANO
+export KBUILD_BUILD_USER=Kohei
+export KBUILD_BUILD_HOST=Izumi
 export SUBARCH=arm64
 export ANDROID_MAJOR_VERSION=q
-export PATH="/home/_123/KERNEL/clang-r416183b1/bin:$PATH"
+export PATH="/home/anuragrai/.local/src/android_clang_prebuilt/bin:$PATH"
 export LLVM=1
 export LLVM_IAS=1
 export CROSS_COMPILE=aarch64-linux-gnu-
