@@ -18,6 +18,7 @@
 #include <linux/spinlock.h>
 #include <linux/interrupt.h>
 #include <linux/wait.h>
+#include <linux/irq.h>
 #include <linux/kthread.h>
 #include <linux/pm_qos.h>
 #include <linux/delay.h>
