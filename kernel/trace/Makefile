@@ -76,3 +76,7 @@ obj-$(CONFIG_GPU_TRACEPOINTS) += gpu-traces.o
 obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
 
 libftrace-y := ftrace.o
+
+ifeq ($(CONFIG_ANDROID),y)
+CFLAGS_trace.o += -DCONFIG_DEBUG_FS
+endif
