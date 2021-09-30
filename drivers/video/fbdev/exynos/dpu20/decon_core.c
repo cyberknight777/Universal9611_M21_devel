@@ -55,6 +55,7 @@
 #include "../../../../dma-buf/sync_debug.h"
 #include "dpp.h"
 #include <linux/devfreq_boost.h>
+#include <linux/cpu_input_boost.h>
 #include <linux/kprofiles.h>
 #if defined(CONFIG_EXYNOS_DISPLAYPORT)
 #include "displayport.h"
@@ -2717,11 +2718,11 @@ static int decon_set_win_config(struct decon_device *decon,
 		devfreq_boost_kick(DEVFREQ_EXYNOS_MIF);
 		pr_info("Balanced profile detected! boosting CPU & DDR bus\n");
 	  } else if (active_mode() == 3) {
-		devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
-		pr_info("Performance profile detected! boosting CPU & DDR bus\n");
+		cpu_input_boost_kick_max(60);
+		pr_info("Gaming profile detected! boosting CPU & DDR bus\n");
 	  } else {
 	    pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
-	  }			 
+	  }				 
 		win_data->retire_fence = decon_create_fence(decon, &sync_file);
 		if (win_data->retire_fence < 0)
 			goto err_prepare;
@@ -2751,11 +2752,11 @@ static int decon_set_win_config(struct decon_device *decon,
 		devfreq_boost_kick(DEVFREQ_EXYNOS_MIF);
 		pr_info("Balanced profile detected! boosting CPU & DDR bus\n");
 	  } else if (active_mode() == 3) {
-		devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
-		pr_info("Performance profile detected! boosting CPU & DDR bus\n");
+		cpu_input_boost_kick_max(60);
+		pr_info("Gaming profile detected! boosting CPU & DDR bus\n");
 	  } else {
 	    pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
-	  }
+	  }		
 		decon_create_release_fences(decon, win_data, sync_file);
 #if !defined(CONFIG_SUPPORT_LEGACY_FENCE)
 		regs->retire_fence = dma_fence_get(sync_file->fence);

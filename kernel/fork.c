@@ -2330,9 +2330,9 @@ long _do_fork(unsigned long clone_flags,
 	  pr_info("Balance profile detected! boosting CPU & DDR bus\n");
 	} else if (task_is_zygote(current) && active_mode() == 3) {
 	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
-	  pr_info("Performance profile detected! boosting CPU & DDR bus\n");
+	  pr_info("Gaming profile detected! boosting CPU & DDR bus\n");
 	} else {
-	    pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
+	  pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
 	}
 
 	/*
