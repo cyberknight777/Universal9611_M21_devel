@@ -95,6 +95,7 @@
 #include <linux/cpufreq_times.h>
 #include <linux/scs.h>
 #include <linux/devfreq_boost.h>
+#include <linux/cpu_input_boost.h>
 #include <linux/simple_lmk.h>
 #include <linux/kprofiles.h>
 
@@ -2328,7 +2329,8 @@ long _do_fork(unsigned long clone_flags,
 	if (task_is_zygote(current) && active_mode() == 2) {
 	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 50);
 	} else if (task_is_zygote(current) && active_mode() == 3) {
-	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
+	  cpu_input_boost_kick_max(60);
+          devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
 	}
 	/*
 	 * Determine whether and which event to report to ptracer.  When
