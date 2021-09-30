@@ -31,6 +31,7 @@
 #include <linux/syscore_ops.h>
 #include <linux/tick.h>
 #include <trace/events/power.h>
+#include <linux/kprofiles.h>
 
 static LIST_HEAD(cpufreq_policy_list);
 
@@ -696,8 +697,10 @@ static ssize_t store_##file_name					\
 	int ret, temp;							\
 	struct cpufreq_policy new_policy;				\
 									\
+	if (active_mode() == 3) {		                        \
 	if (&policy->object == &policy->min)				\
 		return count;						\
+	} 								\
 									\
 	memcpy(&new_policy, policy, sizeof(*policy));			\
 	new_policy.min = policy->user_policy.min;			\
