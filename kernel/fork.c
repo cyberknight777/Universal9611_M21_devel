@@ -2327,14 +2327,9 @@ long _do_fork(unsigned long clone_flags,
 	/* Boost DDR bus to the max when userspace launches an app according to set kernel profile */
 	if (task_is_zygote(current) && active_mode() == 2) {
 	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 50);
-	  pr_info("Balance profile detected! boosting CPU & DDR bus\n");
 	} else if (task_is_zygote(current) && active_mode() == 3) {
 	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
-	  pr_info("Gaming profile detected! boosting CPU & DDR bus\n");
-	} else {
-	  pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
 	}
-
 	/*
 	 * Determine whether and which event to report to ptracer.  When
 	 * called from kernel_thread or CLONE_UNTRACED is explicitly

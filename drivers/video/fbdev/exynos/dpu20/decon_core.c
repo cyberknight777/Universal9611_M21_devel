@@ -2716,13 +2716,9 @@ static int decon_set_win_config(struct decon_device *decon,
 	if (num_of_window) {
 	  if (active_mode() == 2) {
 		devfreq_boost_kick(DEVFREQ_EXYNOS_MIF);
-		pr_info("Balanced profile detected! boosting CPU & DDR bus\n");
 	  } else if (active_mode() == 3) {
 		cpu_input_boost_kick_max(60);
-		pr_info("Gaming profile detected! boosting CPU & DDR bus\n");
-	  } else {
-	    pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
-	  }				 
+	  }		 
 		win_data->retire_fence = decon_create_fence(decon, &sync_file);
 		if (win_data->retire_fence < 0)
 			goto err_prepare;
@@ -2750,13 +2746,9 @@ static int decon_set_win_config(struct decon_device *decon,
 	if (num_of_window) {
 	  if (active_mode() == 2) {
 		devfreq_boost_kick(DEVFREQ_EXYNOS_MIF);
-		pr_info("Balanced profile detected! boosting CPU & DDR bus\n");
 	  } else if (active_mode() == 3) {
 		cpu_input_boost_kick_max(60);
-		pr_info("Gaming profile detected! boosting CPU & DDR bus\n");
-	  } else {
-	    pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
-	  }		
+	  }	
 		decon_create_release_fences(decon, win_data, sync_file);
 #if !defined(CONFIG_SUPPORT_LEGACY_FENCE)
 		regs->retire_fence = dma_fence_get(sync_file->fence);
