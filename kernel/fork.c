@@ -96,6 +96,7 @@
 #include <linux/scs.h>
 #include <linux/devfreq_boost.h>
 #include <linux/simple_lmk.h>
+#include <linux/kprofiles.h>
 
 #include <asm/pgtable.h>
 #include <asm/pgalloc.h>
@@ -2323,9 +2324,16 @@ long _do_fork(unsigned long clone_flags,
 	int trace = 0;
 	long nr;
 
-	/* Boost DDR bus to the max for 50 ms when userspace launches an app */
-	if (task_is_zygote(current))
-		devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 50);
+	/* Boost DDR bus to the max when userspace launches an app according to set kernel profile */
+	if (task_is_zygote(current) && active_mode() == 2) {
+	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 50);
+	  pr_info("Balance profile detected! boosting CPU & DDR bus\n");
+	} else if (task_is_zygote(current) && active_mode() == 3) {
+	  devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
+	  pr_info("Performance profile detected! boosting CPU & DDR bus\n");
+	} else {
+	    pr_info("Battery profile detected! Skipping CPU & DDR bus boosts\n");
+	}
 
 	/*
 	 * Determine whether and which event to report to ptracer.  When
