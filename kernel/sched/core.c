@@ -3876,6 +3876,8 @@ struct tick_work {
  */
 
 static struct tick_work __percpu *tick_work_cpu;
+bool tick_nohz_tick_stopped_cpu(int cpu);
+void calc_load_nohz_remote(struct rq *rq);
 
 static void sched_tick_remote(struct work_struct *work)
 {
@@ -3926,7 +3928,7 @@ out_requeue:
 	 * to keep scheduler internal stats reasonably up to date.  But
 	 * first update state to reflect hotplug activity if required.
 	 */
-	os = atomic_fetch_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
+	os = __atomic_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
 	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
 	if (os == TICK_SCHED_REMOTE_RUNNING)
 		queue_delayed_work(system_unbound_wq, dwork, HZ);
