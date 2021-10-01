@@ -2718,6 +2718,8 @@ static int decon_set_win_config(struct decon_device *decon,
 		devfreq_boost_kick(DEVFREQ_EXYNOS_MIF);
 	  } else if (active_mode() == 3) {
 		cpu_input_boost_kick_max(60);
+	  } else if (active_mode() == 1) {
+		pr_info("Battery profile detected! Skipping Frame rendering boost\n");
 	  }		 
 		win_data->retire_fence = decon_create_fence(decon, &sync_file);
 		if (win_data->retire_fence < 0)
@@ -2748,6 +2750,8 @@ static int decon_set_win_config(struct decon_device *decon,
 		devfreq_boost_kick(DEVFREQ_EXYNOS_MIF);
 	  } else if (active_mode() == 3) {
 		cpu_input_boost_kick_max(60);
+	  }	else if (active_mode() == 1) {
+		pr_info("Battery profile detected! Skipping Frame rendering boost\n");
 	  }	
 		decon_create_release_fences(decon, win_data, sync_file);
 #if !defined(CONFIG_SUPPORT_LEGACY_FENCE)

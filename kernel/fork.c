@@ -2331,6 +2331,8 @@ long _do_fork(unsigned long clone_flags,
 	} else if (task_is_zygote(current) && active_mode() == 3) {
 	  cpu_input_boost_kick_max(60);
           devfreq_boost_kick_max(DEVFREQ_EXYNOS_MIF, 60);
+	} else if (task_is_zygote(current) && active_mode() == 1) {
+	  pr_info("Battery profile detected! Skipping zygote boost...\n");
 	}
 	/*
 	 * Determine whether and which event to report to ptracer.  When
