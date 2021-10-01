@@ -46,6 +46,7 @@ case "${KCONFIG_CONFIG}" in
 *)
 	# Force using a file from the current directory
 	. "./${KCONFIG_CONFIG}"
+	;;
 esac
 
 # In case it doesn't exist yet...
@@ -53,46 +54,47 @@ if [ -e "$cur_ksyms_file" ]; then touch "$cur_ksyms_file"; fi
 
 # Generate a new ksym list file with symbols needed by the current
 # set of modules.
-cat > "$new_ksyms_file" << EOT
+cat >"$new_ksyms_file" <<EOT
 /*
  * Automatically generated file; DO NOT EDIT.
  */
 
 EOT
 [ "$(ls -A "$MODVERDIR")" ] &&
-sed -ns -e '3{s/ /\n/g;/^$/!p;}' "$MODVERDIR"/*.mod | sort -u |
-while read sym; do
-	if [ -n "$CONFIG_HAVE_UNDERSCORE_SYMBOL_PREFIX" ]; then
-		sym="${sym#_}"
-	fi
-	echo "#define __KSYM_${sym} 1"
-done >> "$new_ksyms_file"
+	sed -ns -e '3{s/ /\n/g;/^$/!p;}' "$MODVERDIR"/*.mod | sort -u |
+	while read sym; do
+		if [ -n "$CONFIG_HAVE_UNDERSCORE_SYMBOL_PREFIX" ]; then
+			sym="${sym#_}"
+		fi
+		echo "#define __KSYM_${sym} 1"
+	done >>"$new_ksyms_file"
 
 # Special case for modversions (see modpost.c)
 if [ -n "$CONFIG_MODVERSIONS" ]; then
-	echo "#define __KSYM_module_layout 1" >> "$new_ksyms_file"
+	echo "#define __KSYM_module_layout 1" >>"$new_ksyms_file"
 fi
 
 # Extract changes between old and new list and touch corresponding
 # dependency files.
 changed=$(
-count=0
-sort "$cur_ksyms_file" "$new_ksyms_file" | uniq -u |
-sed -n 's/^#define __KSYM_\(.*\) 1/\1/p' | tr "A-Z_" "a-z/" |
-while read sympath; do
-	if [ -z "$sympath" ]; then continue; fi
-	depfile="include/config/ksym/${sympath}.h"
-	mkdir -p "$(dirname "$depfile")"
-	touch "$depfile"
-	# Filesystems with coarse time precision may create timestamps
-	# equal to the one from a file that was very recently built and that
-	# needs to be rebuild. Let's guard against that by making sure our
-	# dep files are always newer than the first file we created here.
-	while [ ! "$depfile" -nt "$new_ksyms_file" ]; do
-		touch "$depfile"
-	done
-	echo $((count += 1))
-done | tail -1 )
+	count=0
+	sort "$cur_ksyms_file" "$new_ksyms_file" | uniq -u |
+		sed -n 's/^#define __KSYM_\(.*\) 1/\1/p' | tr "A-Z_" "a-z/" |
+		while read sympath; do
+			if [ -z "$sympath" ]; then continue; fi
+			depfile="include/config/ksym/${sympath}.h"
+			mkdir -p "$(dirname "$depfile")"
+			touch "$depfile"
+			# Filesystems with coarse time precision may create timestamps
+			# equal to the one from a file that was very recently built and that
+			# needs to be rebuild. Let's guard against that by making sure our
+			# dep files are always newer than the first file we created here.
+			while [ ! "$depfile" -nt "$new_ksyms_file" ]; do
+				touch "$depfile"
+			done
+			echo $((count += 1))
+		done | tail -1
+)
 changed=${changed:-0}
 
 if [ $changed -gt 0 ]; then
